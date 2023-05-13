@@ -12,10 +12,9 @@ jobs:
         with:
           fetch-depth: 2
       - name: Git config user
-        uses: snow-actions/git-config-user@v1.0.0
-        with:
-          name: CI Build
-          email: ci-build+sebastianscatularo@gmail.com
+        run: |
+          git config user.name CI Build
+          git config user.email ci-build+sebastianscatularo@gmail.com
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -31,10 +30,7 @@ jobs:
           name: wormhole-explorer
           path: apps/explorer/build # or path/to/artifact
   deploy:
-    # Add a dependency to the build job
     needs: build
-
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
       pages: write      # to deploy to Pages
       id-token: write   # to verify the deployment originates from an appropriate source
@@ -47,12 +43,19 @@ jobs:
     # Specify runner + deployment step
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+        name: Deploy to GitHub Pages
+        with:
+          ref: gh-pages
+        run: |
+          git config user.name CI Build
+          git config user.email ci-build+sebastianscatularo@gmail.com
+
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: wormhole-explorer
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
-        with:
-          artifact_name: wormhole-explorer
+        run: |
+          git add .
+          git commit -m "deploy"
+          git -f push

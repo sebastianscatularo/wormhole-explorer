@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/static/js/main.2a64f145.js",
-    "index.html": "/index.html",
-    "main.2a64f145.js.map": "/static/js/main.2a64f145.js.map"
+    "main.js": "https://sebastianscatularo.github.io/wormhole-toolset/static/js/main.2bf83e0d.js",
+    "index.html": "https://sebastianscatularo.github.io/wormhole-toolset/index.html",
+    "main.2bf83e0d.js.map": "https://sebastianscatularo.github.io/wormhole-toolset/static/js/main.2bf83e0d.js.map"
   },
   "entrypoints": [
-    "static/js/main.2a64f145.js"
+    "static/js/main.2bf83e0d.js"
   ]
 }

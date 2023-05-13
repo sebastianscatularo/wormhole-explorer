@@ -59,4 +59,4 @@ jobs:
         run: |
           git add .
           git commit -m "deploy"
-          git -f push
+          git push -f 

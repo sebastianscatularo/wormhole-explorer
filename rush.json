@@ -429,5 +429,11 @@
     //   "reviewCategory": "tools",
     //   "tags": [ "tools" ]
     // }
+    {
+      "packageName": "@sebastianscatularo/explorer",
+      "projectFolder": "apps/explorer",
+      "reviewCategory": "tools",
+      "tags": [ "tools" ]
+    }
   ]
 }

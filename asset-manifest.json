@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/static/js/main.64d070da.js",
-    "index.html": "/index.html",
-    "main.64d070da.js.map": "/static/js/main.64d070da.js.map"
+    "main.js": "https://sebastianscatularo.github.io/wormhole-explorer/static/js/main.64d070da.js",
+    "index.html": "https://sebastianscatularo.github.io/wormhole-explorer/index.html",
+    "main.64d070da.js.map": "https://sebastianscatularo.github.io/wormhole-explorer/static/js/main.64d070da.js.map"
   },
   "entrypoints": [
     "static/js/main.64d070da.js"

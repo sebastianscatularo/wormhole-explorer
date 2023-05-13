@@ -32,29 +32,28 @@ jobs:
         with:
           name: wormhole-explorer
           path: apps/explorer/build # or path/to/artifact
-  deploy:
-    needs: build
-    permissions:
-      contents: write  # To push a branch 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-      - name: Git config user
-        run: |
-          git config user.name CI Build
-          git config user.email ci-build+sebastianscatularo@gmail.com
-
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: wormhole-explorer
-      - name: Deploy to GitHub Pages
-        run: |
-          git add .
-          git commit --allow-empty -m "Deploy"
-          git push -f 
+  #deploy:
+  #  needs: build
+  #  permissions:
+  #    contents: write  # To push a branch 
+  #  environment:
+  #    name: github-pages
+  #    url: ${{ steps.deployment.outputs.page_url }}
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #      with:
+  #        ref: gh-pages
+  #    - name: Git config user
+  #      run: |
+  #        git config user.name CI Build
+  #        git config user.email ci-build+sebastianscatularo@gmail.com
+  #    - name: Download artifact
+  #      uses: actions/download-artifact@v3
+  #      with:
+  #        name: wormhole-explorer
+  #    - name: Deploy to GitHub Pages
+  #      run: |
+  #        git add .
+  #        git commit --allow-empty -m "Deploy"
+  #        git push -f 

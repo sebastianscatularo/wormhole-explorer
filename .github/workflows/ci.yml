@@ -7,8 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      PUBLIC_URL: https://sebastianscatularo.github.io/wormhole-explorer/
     steps:
 
       - uses: actions/checkout@v3

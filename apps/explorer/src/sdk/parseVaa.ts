@@ -1,28 +1,38 @@
-// Adapted from https://github.com/wormhole-foundation/wormhole/blob/main/sdk/js/src/vaa/wormhole.ts
-// Didn't want the extra imports yet
+import { is } from "superstruct";
+import type { Vaa, GuardianSignature } from "../model";
 import { Buffer } from "buffer";
-
-export interface GuardianSignature {
-  index: number;
-  signature: Buffer;
-}
-
-export interface ParsedVaa {
-  version: number;
-  guardianSetIndex: number;
-  guardianSignatures: GuardianSignature[];
-  timestamp: number;
-  nonce: number;
-  emitterChain: number;
-  emitterAddress: Buffer;
-  sequence: bigint;
-  consistencyLevel: number;
-  payload: Buffer;
-}
 
 export type SignedVaa = Uint8Array | Buffer;
 
-export function parseVaa(vaa: SignedVaa): ParsedVaa {
+/*
+ const isHex = /^(0[xX])?[A-Fa-f0-9]+$/.test(vaaString);
+      const hasPrefix = isHex && vaaString.toLowerCase().startsWith("0x");
+      const buf = Buffer.from(
+        hasPrefix ? vaaString.slice(2) : vaaString,
+        isHex ? "hex" : "base64"
+      );
+      const vaa = parseVaa(buf);
+*/
+
+export function isHex(vaa: string) {
+  return /^(0[xX])?[A-Fa-f0-9]+$/.test(vaa)
+}
+
+export function isPrefixedHex(vaa: string) {
+  return isHex(vaa) && vaa.toLowerCase().startsWith("0x");
+}
+
+export function toBuffer(vaa: string) {
+  if (isPrefixedHex(vaa)) {
+    return Buffer.from(vaa.slice(2), "hex");
+  } else if (isHex(vaa)) {
+    return Buffer.from(vaa, "hex");
+  } else {
+    return Buffer.from(vaa, "base64");
+  }
+}
+
+export function parseVaa(vaa: SignedVaa): Vaa {
   const signedVaa = Buffer.isBuffer(vaa) ? vaa : Buffer.from(vaa as Uint8Array);
   const sigStart = 6;
   const numSigners = signedVaa[5];

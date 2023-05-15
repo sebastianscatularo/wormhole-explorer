@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Buffer } from 'buffer';
-import { Vaa } from "../model";
-import { toBuffer, parseVaa, isHex } from "../sdk/parseVaa";
-import { type } from "superstruct";
+import type { Vaa, GuardianSignature } from "../model";
 import { useParams } from "react-router-dom";
 
 export enum VaaRawFormat {
@@ -11,6 +9,8 @@ export enum VaaRawFormat {
     UNKNOWN = "unknown",
 }
 
+export type SignedVaa = Uint8Array | Buffer;
+
 function isBase64(str: string) {
     try {
         const buffer = Buffer.from(str, 'base64');
@@ -18,6 +18,55 @@ function isBase64(str: string) {
     } catch (_ignored) {
         return false;
     }
+}
+
+function isHex(vaa: string) {
+  return /^(0[xX])?[A-Fa-f0-9]+$/.test(vaa)
+}
+
+function isPrefixedHex(vaa: string) {
+  return isHex(vaa) && vaa.toLowerCase().startsWith("0x");
+}
+
+function toBuffer(vaa: string) {
+  if (isPrefixedHex(vaa)) {
+    return Buffer.from(vaa.slice(2), "hex");
+  } else if (isHex(vaa)) {
+    return Buffer.from(vaa, "hex");
+  } else {
+    return Buffer.from(vaa, "base64");
+  }
+}
+
+function parseVaa(vaa: SignedVaa): Vaa {
+  const signedVaa = Buffer.isBuffer(vaa) ? vaa : Buffer.from(vaa as Uint8Array);
+  const sigStart = 6;
+  const numSigners = signedVaa[5];
+  const sigLength = 66;
+
+  const guardianSignatures: GuardianSignature[] = [];
+  for (let i = 0; i < numSigners; ++i) {
+    const start = sigStart + i * sigLength;
+    guardianSignatures.push({
+      index: signedVaa[start],
+      signature: signedVaa.subarray(start + 1, start + 66),
+    });
+  }
+
+  const body = signedVaa.subarray(sigStart + sigLength * numSigners);
+
+  return {
+    version: signedVaa[0],
+    guardianSetIndex: signedVaa.readUInt32BE(1),
+    guardianSignatures,
+    timestamp: body.readUInt32BE(0),
+    nonce: body.readUInt32BE(4),
+    emitterChain: body.readUInt16BE(8),
+    emitterAddress: body.subarray(10, 42),
+    sequence: body.readBigUInt64BE(42),
+    consistencyLevel: body[50],
+    payload: body.subarray(51),
+  };
 }
  
 
